@@ -15,6 +15,8 @@ Route::get('/', 'index/OBS/bucket');
 Route::get(':bucket/$', 'index/OBS/get');
 Route::get(':bucket$', 'index/OBS/get');
 Route::get('[:bucket]/:file$', 'index/OBS/get');
+Route::put(':bucket$', 'index/OBS/put');
+Route::put(':bucket/$', 'index/OBS/put');
 Route::put('[:bucket]/:file$', 'index/OBS/put');
 Route::delete(':bucket$', 'index/OBS/delete');
 Route::delete(':bucket/$', 'index/OBS/delete');

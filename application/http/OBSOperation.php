@@ -17,14 +17,23 @@ class OBSOperation
     }
 
     public static function put($bucket = '', $file = ''){
-        $putData = fopen("php://input", "r");
-        $fp = fopen(Config::get('obs_location')."$bucket/$file",'w');
+        $obs = Config::get('obs_location');
+        if (is_file("$obs$bucket/$file"))
+            return XmlException::render('The object you tried to create already exist.', 'ObjectExist', 409);
+        else if ($file == '' && is_dir("$obs$bucket"))
+            return XmlException::render('The bucket you tried to create already exist, and you own it.', 'BucketAlreadyOwnByYou', 409);
+        else if ($file == '')
+            mkdir("$obs$bucket",'0644');
+        else{
+            $putData = fopen("php://input", "r");
+            $fp = fopen(Config::get('obs_location')."$bucket/$file",'w');
 
-        while($data = fread($putData, 4096))
-            fwrite($fp, $data);
+            while($data = fread($putData, 4096))
+                fwrite($fp, $data);
 
-        fclose($fp);
-        fclose($putData);
+            fclose($fp);
+            fclose($putData);
+        }
 
         return null;
     }
