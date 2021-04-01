@@ -20,8 +20,8 @@ class OBSResponse
                 if($v != '.' && $v != '..' && is_file("$obs$bucket/$v"))
                     $objects[] = [
                         'Key' => $v,
-                        'LastModified' => date('c', filemtime("$obs$bucket/$v")),
-                        'ETag' => strtoupper('"'.rand_str(32).'"'),
+                        'LastModified' => gmdate('Y-m-d\\TH:i:s.000\\Z', filemtime("$obs$bucket/$v")),
+                        'ETag' => md5_file("$obs$bucket/$v"),
                         'Size' => filesize("$obs$bucket/$v"),
                         'Owner' => [
                             'ID',
@@ -47,7 +47,7 @@ class OBSResponse
                 'Name' => $bucket,
                 'Prefix' => '',
                 'Marker' => '',
-                'MaxKeys' => 1000,
+                'MaxKeys' => sizeof(scandir("$obs$bucket"))-2,
                 'IsTruncated' => 'false',
             ];
 
